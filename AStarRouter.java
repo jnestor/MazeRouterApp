@@ -9,7 +9,7 @@ import java.util.*;
  *
  * @author 15002
  */
-public class AStarRouter extends Router {
+public class AStarRouter extends MazeRouter {
     
     public AStarRouter(Grid g){
         super(g);
@@ -87,6 +87,7 @@ public class AStarRouter extends Router {
 	if (myGrid.getSource() != null && myGrid.getTarget() != null) {
 	    myGrid.getSource().initExpand();
 	    if ((actualLength = expandGrid(myGrid.getSource())) > 0) {
+                beep();
 		clearQueue();
 		return actualLength; // found it right away!
 	    }
@@ -98,6 +99,7 @@ public class AStarRouter extends Router {
                         wait();
                     }
                 }
+                beep();
                 myGrid.setMessage("Current distance: " + getTail().getGVal()+
                         " || Current detour: "+ ((GridPoint)gpq.last()).getFVal());
 		//printGridPointQueue();

@@ -10,7 +10,7 @@ import java.util.*;
  *
  * @author 15002
  */
-public class HadlockRouter extends Router {
+public class HadlockRouter extends MazeRouter {
 
     public HadlockRouter(Grid g) {
         super(g);
@@ -20,6 +20,7 @@ public class HadlockRouter extends Router {
     public int expandGrid(GridPoint gridPoint) throws InterruptedException {
         GridPoint xp;
         if ((xp = gridPoint.westNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            beep();
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
             if (xp.isTarget()) {
@@ -29,6 +30,7 @@ public class HadlockRouter extends Router {
             }
         }
         if ((xp = gridPoint.eastNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            beep();
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
             if (xp.isTarget()) {
@@ -38,6 +40,7 @@ public class HadlockRouter extends Router {
             }
         }
         if ((xp = gridPoint.southNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            beep();
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
             if (xp.isTarget()) {
@@ -47,6 +50,7 @@ public class HadlockRouter extends Router {
             }
         }
         if ((xp = gridPoint.northNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            beep();
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
             if (xp.isTarget()) {
@@ -56,6 +60,7 @@ public class HadlockRouter extends Router {
             }
         }
         if ((xp = gridPoint.upNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            beep();
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
             if (xp.isTarget()) {
@@ -65,6 +70,7 @@ public class HadlockRouter extends Router {
             }
         }
         if ((xp = gridPoint.downNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            beep();
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
             if (xp.isTarget()) {
@@ -87,6 +93,7 @@ public class HadlockRouter extends Router {
         if (myGrid.getSource() != null && myGrid.getTarget() != null) {
             myGrid.getSource().initExpand();
             if ((actualLength = expandGrid(myGrid.getSource())) > 0) {
+                beep();
                 clearQueue();
                 return actualLength; // found it right away!
             }
@@ -98,6 +105,7 @@ public class HadlockRouter extends Router {
                         wait();
                     }
                 }
+               //beep();
                 myGrid.setMessage("Current distance: " + getTail().getGVal()+
                         " || Current detour: "+ ((GridPoint)gpq.last()).getFVal());
                 // printGridPointQueue();
@@ -105,12 +113,9 @@ public class HadlockRouter extends Router {
                     myGrid.setMessage("Current distance: " + actualLength);
                     myGrid.gridDelay(5);
                     clearQueue();
-                    System.out.println(gp.getFVal());
-                    System.out.println(gp.getDisplayVal());
                     return actualLength;  // found it!
                 }
             }
-            System.out.println("stoped");
         }
         return -1;
     }

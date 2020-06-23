@@ -30,7 +30,7 @@ class Grid extends JPanel {
 
     private boolean displayParallelMode = false;
 
-    public boolean getMode() {
+    public boolean isParallel() {
         return displayParallelMode;
     }
 
@@ -117,7 +117,7 @@ class Grid extends JPanel {
     }
 
     public static int calculateRows(int pixelHeight, int nLayers) {
-        int rawCols = ((pixelHeight - 60) / GRIDSIZE) - 2; // adjust for msg, clr btn
+        int rawCols = ((pixelHeight - 80) / GRIDSIZE) - 2; // adjust for msg, clr btn
         return rawCols / nLayers - 1; // adjust  -1 for layer labels
     }
 
@@ -169,9 +169,9 @@ class Grid extends JPanel {
         gridDelay(1);
     }
 
-    private Router router;
+    private MazeRouter router;
 
-    public void setRouter(Router r) {
+    public void setRouter(MazeRouter r) {
         router = r;
     }
 
@@ -201,12 +201,12 @@ class Grid extends JPanel {
     // the following are used in drawing into the grid panel and are package visible
     private static int GRIDSIZE = 24;
     private static int CHARXOFFSET = GRIDSIZE / 3;
-    private static int CHARYOFFSET = GRIDSIZE / 2 + GRIDSIZE / 3;
+    private static int CHARYOFFSET = GRIDSIZE / 2 + GRIDSIZE / 4+GRIDSIZE / 10;
 
     public static void resetGridSize(int i) {
         GRIDSIZE = i;
         CHARXOFFSET = GRIDSIZE / 3;
-        CHARYOFFSET = GRIDSIZE / 2 + GRIDSIZE / 3;
+        CHARYOFFSET = GRIDSIZE / 2 + GRIDSIZE / 5+GRIDSIZE / 10;
     }
 
     public int getGridSize() {
@@ -244,7 +244,6 @@ class Grid extends JPanel {
         if (!paused && (state == WAITFORSRC || state == WAITFORTGT)) {
             clickedPoint = mouseToGridPoint(x, y);
             notifyAll();
-            System.out.println("handleMouseClick: " + clickedPoint);
         }
     }
 
@@ -306,9 +305,7 @@ class Grid extends JPanel {
                 } else if (clickedPoint != null) {
                     if (!clickedPoint.isRouted()) {
                         setSource(clickedPoint);
-                        System.out.println("Setting source: " + clickedPoint);
                         state = WAITFORTGT;
-                        System.out.println("Entering WAITFORTGT");
                         setMessage("Click on Target");
                     } else {
                         setMessage("Already routed!");
@@ -320,7 +317,6 @@ class Grid extends JPanel {
             } else if (state == WAITFORTGT) {
                 if (clickedPoint != null) {
                     setTarget(clickedPoint);
-                    System.out.println("Setting target: " + clickedPoint);
                     clickedPoint = null;
                     setMessage("Ready to Route!");
                     gridDelay(5);
@@ -331,7 +327,6 @@ class Grid extends JPanel {
                     tgt = null;
                     state = WAITFORSRC;
                     setMessage("Click on Source");
-                    System.out.println("state=" + state);
                     redrawGrid();
                 }
                 clearPending = false;
@@ -390,7 +385,7 @@ class Grid extends JPanel {
     GridPoint src;
     GridPoint tgt;
 
-    public Router getRouter() {
+    public MazeRouter getRouter() {
         return router;
     }
 

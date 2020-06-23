@@ -42,7 +42,12 @@ public class Sound {
 
     public static void changeFreq(int hz, int ms, double vol) throws LineUnavailableException {
         byte[] buf = new byte[(int) SAMPLERATE * ms / 1000];
-
+        if(vol>0.6){
+            vol=0.6;
+        }
+        if(hz>1000){
+            hz = 1000;
+        }
         for (int i = 0; i < buf.length; i++) {
             double angle = i / (SAMPLERATE / hz) * 2.0 * Math.PI;
             buf[i] = (byte) (Math.sin(angle) * 127.0 * vol);
@@ -65,7 +70,7 @@ public class Sound {
 
     public void play(int i) {
         try {
-            changeFreq(200 + i * 5, 100, 0.2 + i / 100);
+            changeFreq(200 + i * 5, 150, 0.2 + i / 100);
         } catch (LineUnavailableException e) {
         }
     }

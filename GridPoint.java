@@ -96,18 +96,18 @@ class GridPoint implements Comparable {
             }
             fillGridPoint(g);
             g.setColor(Color.black);
-            labelGridPoint(g, "S");
+            labelGridPoint(g, "S",false);
         } else if (isTarget()) {
             if (highlighted) {
                 g.setColor(Color.yellow);
                 fillGridPoint(g);
                 g.setColor(Color.black);
-                labelGridPoint(g, Integer.toString(displayVal));
+                labelGridPoint(g, Integer.toString(displayVal),isTwoDig(displayVal));
             } else {
                 g.setColor(Color.red);
                 fillGridPoint(g);
                 g.setColor(Color.black);
-                labelGridPoint(g, "T");
+                labelGridPoint(g, "T",false);
             }
         } else if (gVal < UNROUTED) {
             if (isEnqueued()) {
@@ -117,7 +117,7 @@ class GridPoint implements Comparable {
             }
             fillGridPoint(g);
             g.setColor(Color.black);
-            labelGridPoint(g, Integer.toString(displayVal));
+            labelGridPoint(g, Integer.toString(displayVal),isTwoDig(displayVal));
         }
     }
 
@@ -126,9 +126,17 @@ class GridPoint implements Comparable {
                 myGrid.getGridSize() - 3, myGrid.getGridSize() - 3);
     }
 
-    private void labelGridPoint(Graphics g, String s) {
+    private void labelGridPoint(Graphics g, String s,boolean twoDig) {
+        int size = 12*myGrid.getGridSize()/21;
+        g.setFont(new Font("Bold", Font.PLAIN, size));
+        if(!twoDig)
         g.drawString(s, myGrid.gridPanelX(posx, posy, posz) + myGrid.getXOffset(),
                 myGrid.gridPanelY(posx, posy, posz) + myGrid.getYOffset());
+        else{
+            int xOff = myGrid.getXOffset()/2+myGrid.getXOffset()/10;
+            g.drawString(s, myGrid.gridPanelX(posx, posy, posz) + xOff,
+                myGrid.gridPanelY(posx, posy, posz) + myGrid.getYOffset());
+        }
     }
 
     public String toString() {
@@ -301,6 +309,10 @@ class GridPoint implements Comparable {
         } else {
             return 1;
         }
+    }
+    
+    private static boolean isTwoDig(int i){
+        return !(i==i%10);
     }
 
 }

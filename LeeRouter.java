@@ -1,4 +1,6 @@
+
 import java.util.*;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -9,7 +11,7 @@ import java.util.*;
  *
  * @author 15002
  */
-public class LeeRouter extends Router {
+public class LeeRouter extends MazeRouter {
 
     public LeeRouter(Grid g) {
         super(g);
@@ -78,7 +80,6 @@ public class LeeRouter extends Router {
 
     @Override
     public int expansion() throws InterruptedException {
-        System.out.println("EXAPNDING");
         myGrid.setState(EXPANDING);
         GridPoint gp;
         int actualLength;
@@ -88,6 +89,7 @@ public class LeeRouter extends Router {
         if (myGrid.getSource() != null && myGrid.getTarget() != null) {
             myGrid.getSource().initExpand();
             if ((actualLength = expandGrid(myGrid.getSource())) > 0) {
+                beep();
                 clearQueue();
                 return actualLength; // found it right away!
             }
@@ -99,10 +101,14 @@ public class LeeRouter extends Router {
                     }
                 }
                 myGrid.setMessage("Current distance: " + getTail().getGVal());
-                if (myGrid.getMode() && (gp.getGVal() > curVal)) {
+                if (myGrid.isParallel() && (gp.getGVal() > curVal)) {
                     curVal = gp.getGVal();
+                    beep();
                     myGrid.redrawGrid();
                     myGrid.gridDelay(2);
+                }
+                else if (!myGrid.isParallel()) {
+                    beep();
                 }
                 if ((actualLength = expandGrid(gp)) > 0) {
                     myGrid.setMessage("Current distance: " + actualLength);
@@ -120,7 +126,7 @@ public class LeeRouter extends Router {
 
     @Override
     public GridPoint getTail() {
-        maxGVal=gridPointTail.getGVal();
+        maxGVal = gridPointTail.getGVal();
         return gridPointTail;
     }
 
@@ -134,7 +140,7 @@ public class LeeRouter extends Router {
         gridPointList.add(gp);
         gp.setEnqueued(true);
         gridPointTail = gp;
-        if (!myGrid.getMode()) {
+        if (!myGrid.isParallel()) {
             myGrid.redrawGrid();
             myGrid.gridDelay();
         }
