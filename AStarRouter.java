@@ -94,14 +94,14 @@ public class AStarRouter extends MazeRouter {
 	    while ((gp = dequeueGridPoint()) != null&&!stop) {
                 if (myGrid.isPaused()) {
                     myGrid.setMessage("Current distance: " + getTail().getGVal()+
-                        " || Current detour: "+ ((GridPoint)gpq.last()).getFVal() + " Pause");
+                        " || Current Max Cost: "+ ((GridPoint)gpq.last()).getFVal() + " Pause");
                     synchronized (this) {
                         wait();
                     }
                 }
                 beep();
                 myGrid.setMessage("Current distance: " + getTail().getGVal()+
-                        " || Current detour: "+ ((GridPoint)gpq.last()).getFVal());
+                        " || Current Max Cost: "+ ((GridPoint)gpq.last()).getFVal());
 		//printGridPointQueue();
 		if ((actualLength = expandGrid(gp)) > 0) {
                     myGrid.setMessage("Current distance: " + actualLength);
