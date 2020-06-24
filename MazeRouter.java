@@ -157,8 +157,9 @@ abstract class MazeRouter {
 
     abstract void clearQueue();
 
-    public void beep() {
+    public void beep() throws InterruptedException {
         beep = true;
+        Thread.sleep(50);
     }
     
     
