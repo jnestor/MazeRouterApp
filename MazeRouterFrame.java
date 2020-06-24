@@ -24,6 +24,7 @@ public class MazeRouterFrame extends JFrame implements Runnable {
     private int routerMode = 0;
     private final JLabel msgBoard = new JLabel();
     private final JLabel title = new JLabel("Lee Algorithm", SwingConstants.CENTER);
+    private boolean parallel = false;
 
     int size = 21;
     int nOL = 1;
@@ -56,7 +57,7 @@ public class MazeRouterFrame extends JFrame implements Runnable {
         pauseBtn.addActionListener(this::pauseAction);
         stopBtn.addActionListener(this::stopAction);
         routerComboBox.addActionListener(this::switchAction);
-        parallelExpandBox.addItemListener(this::expandBoxAction);
+        parallelExpandBox.addItemListener(this::parallelBoxAction);
         tooltipBox.addItemListener(this::traceAction);
         muteBox.addItemListener(this::muteBoxAction);
         resizeWindowBtn.addActionListener(this::resizeAction);
@@ -118,8 +119,9 @@ public class MazeRouterFrame extends JFrame implements Runnable {
         title.setText(routerNames[routerMode]);
     }
 
-    private void expandBoxAction(ItemEvent evt) {
-        myGrid.setParallelExpand(evt.getStateChange() == 1);
+    private void parallelBoxAction(ItemEvent evt) {
+        parallel =evt.getStateChange() == 1;
+        myGrid.setParallelExpand(parallel);
     }
 
     private void muteBoxAction(ItemEvent evt) {
@@ -237,6 +239,7 @@ public class MazeRouterFrame extends JFrame implements Runnable {
         stop();
         getContentPane().remove(myGrid);
         initAllGrids(size, nlayers);
+        myGrid.setParallelExpand(parallel);
         SwingUtilities.updateComponentTreeUI(this);
     }
 
