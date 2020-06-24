@@ -39,7 +39,7 @@ public class Sound {
         sdl.start();
         sdl.write(buf, 0, buf.length);
         sdl.drain();
-        //sdl.close();
+        sdl.close();
 
     }
 
