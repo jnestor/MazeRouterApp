@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.*;
 
 /**
  * Title: MazeApplet Description: Animation of Lee Algorithm for maze routing.
@@ -25,12 +26,15 @@ public class MazeRouterFrame extends JFrame implements Runnable {
     private final JLabel msgBoard = new JLabel();
     private final JLabel title = new JLabel("Lee Algorithm", SwingConstants.CENTER);
     private boolean parallel = false;
-
+    private JSlider speedSlider = new JSlider(10, 100, 50);
     int size = 21;
     int nOL = 1;
-    private final JButton clearBtn = new JButton("CLEAR");
-    private final JButton pauseBtn = new JButton("");
-    private final JButton stopBtn = new JButton("STOP");
+    private final ImageIcon pause = new ImageIcon(getClass().getResource("/images/pause.gif"));
+    private final ImageIcon resume = new ImageIcon(getClass().getResource("/images/start.gif"));
+    private final JToggleButton clearBtn = new JToggleButton(new ImageIcon(getClass().getResource("/images/clear.png")));
+    private final JToggleButton pauseBtn = new JToggleButton(new ImageIcon(getClass().getResource("/images/pause.gif")));
+    private final JToggleButton stopBtn = new JToggleButton(new ImageIcon(getClass().getResource("images/stop.gif")));
+    private final JToggleButton stepBtn = new JToggleButton(new ImageIcon(getClass().getResource("images/step.gif")));
     private final JButton resizeWindowBtn = new JButton("RESIZE");
     private final JCheckBox parallelExpandBox = new JCheckBox("Parallel Mode");
     private final JCheckBox tooltipBox = new JCheckBox("Tooltips for Grids");
@@ -56,27 +60,33 @@ public class MazeRouterFrame extends JFrame implements Runnable {
         JPanel btnPanel = new JPanel();
         pauseBtn.addActionListener(this::pauseAction);
         stopBtn.addActionListener(this::stopAction);
+        stepBtn.addActionListener(this::stepAction);
         routerComboBox.addActionListener(this::switchAction);
         parallelExpandBox.addItemListener(this::parallelBoxAction);
         tooltipBox.addItemListener(this::traceAction);
         muteBox.addItemListener(this::muteBoxAction);
         resizeWindowBtn.addActionListener(this::resizeAction);
+        speedSlider.addChangeListener(this::speedChanged);
         btnPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         msgBoard.setPreferredSize(new Dimension(270, 25));
-        pauseBtn.setPreferredSize(new Dimension(90, 25));
-        clearBtn.setPreferredSize(new Dimension(90, 25));
-        stopBtn.setPreferredSize(new Dimension(90, 25));
+        pauseBtn.setPreferredSize(new Dimension(25, 25));
+        clearBtn.setPreferredSize(new Dimension(25, 25));
+        stepBtn.setPreferredSize(new Dimension(25, 25));
+        stopBtn.setPreferredSize(new Dimension(25, 25));
         resizeWindowBtn.setPreferredSize(new Dimension(90, 25));
+        speedSlider.setPreferredSize(new Dimension(160,25));
         btnPanel.add(msgBoard);
-        btnPanel.add(clearBtn);
-        btnPanel.add(pauseBtn);
-        btnPanel.add(stopBtn);
         btnPanel.add(routerComboBox);
+        btnPanel.add(pauseBtn);
+        btnPanel.add(stepBtn);
+        btnPanel.add(stopBtn);
         btnPanel.add(parallelExpandBox);
         //Uncomment the below line for bebugging
         //btnPanel.add(tooltipBox);
         btnPanel.add(muteBox);
+        btnPanel.add(clearBtn);
         btnPanel.add(resizeWindowBtn);
+        btnPanel.add(speedSlider);
         getContentPane().add(btnPanel, "South");
         initiResizeWindow();
         refreshTimer.start();
@@ -99,7 +109,12 @@ public class MazeRouterFrame extends JFrame implements Runnable {
 
     private void pauseAction(ActionEvent evt) {
         myGrid.pauseResume();
-        pauseBtn.setText(myGrid.isPaused() ? "RESUME" : "PAUSE");
+        pauseBtn.setSelectedIcon(myGrid.isPaused() ? resume : pause);
+    }
+    
+    private void stepAction(ActionEvent evt){
+        myGrid.step();
+        stopBtn.setSelected(false);
     }
 
     private void stopAction(ActionEvent evt) {
@@ -107,10 +122,12 @@ public class MazeRouterFrame extends JFrame implements Runnable {
             myGrid.pauseResume();
         }
         myGrid.stopRouter();
+        stopBtn.setSelected(false);
     }
 
     private void clearAction(ActionEvent evt) {
         myGrid.requestClear();
+        clearBtn.setSelected(false);
     }
 
     private void switchAction(ActionEvent evt) {
@@ -143,15 +160,25 @@ public class MazeRouterFrame extends JFrame implements Runnable {
         resizeWindow.setVisible(true);
         resizeWindow.requestFocusInWindow();
     }
+    
+    public void speedChanged(ChangeEvent e) {
+      JSlider source = (JSlider)e.getSource();
+      if (!source.getValueIsAdjusting()) {
+        int speed = (int)source.getValue();
+	myGrid.setDelay(speed);
+      }
+    }
 
     Timer refreshTimer = new Timer(5, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            pauseBtn.setText(myGrid.isPaused() ? "RESUME" : "PAUSE");
+            pauseBtn.setSelectedIcon(myGrid.isPaused() ? resume : pause);
+           pauseBtn.setSelected(myGrid.isPaused());
             msgBoard.setText(myGrid.getMSG());
             if (myGrid.getState() == WAITFORSRC) {
                 pauseBtn.setEnabled(false);
                 stopBtn.setEnabled(false);
+                stepBtn.setEnabled(false);
                 clearBtn.setEnabled(true);
                 routerComboBox.setEnabled(true);
                 if (routerMode == 0) {
@@ -164,18 +191,21 @@ public class MazeRouterFrame extends JFrame implements Runnable {
             } else if (myGrid.getState() == WAITFORTGT) {
                 pauseBtn.setEnabled(false);
                 stopBtn.setEnabled(false);
+                stepBtn.setEnabled(false);
                 clearBtn.setEnabled(false);
                 routerComboBox.setEnabled(false);
                 parallelExpandBox.setEnabled(false);
             } else if (myGrid.getState() == EXPANDING) {
                 pauseBtn.setEnabled(true);
                 stopBtn.setEnabled(true);
+                stepBtn.setEnabled(true);
                 clearBtn.setEnabled(false);
                 routerComboBox.setEnabled(false);
                 parallelExpandBox.setEnabled(false);
             } else if (myGrid.getState() == TRACKBACK) {
                 pauseBtn.setEnabled(true);
                 stopBtn.setEnabled(false);
+                stepBtn.setEnabled(true);
                 clearBtn.setEnabled(false);
                 routerComboBox.setEnabled(false);
                 parallelExpandBox.setEnabled(false);

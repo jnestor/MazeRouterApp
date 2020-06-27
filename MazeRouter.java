@@ -18,8 +18,8 @@ abstract class MazeRouter {
     protected Grid myGrid;
     protected boolean stop = false;
     protected boolean mute = false;
-    private Sound s = new Sound();
-    private boolean beep = false;
+    private final Sound s = new Sound();
+    protected boolean beep = false;
     public MazeRouter(Grid grid) {
         //beeper.start();
         myGrid = grid;
@@ -30,7 +30,6 @@ abstract class MazeRouter {
     protected static final int TRACKBACK = 3;
     protected static final int WAITFORSRC = 0;
     protected int maxGVal = 0;
-    private int beepMax = 0;
 
     /* expand a routing search */
     abstract int expandGrid(GridPoint gridPoint) throws InterruptedException;
@@ -55,7 +54,7 @@ abstract class MazeRouter {
             myGrid.setMessage("Traceback: distance = " + curval);
             current.setRouted();
             myGrid.redrawGrid();
-            myGrid.gridDelay(3);
+            myGrid.gridDelay(2);
             next = current.westNeighbor();
             if (next != null && !next.isObstacle() && next.getGVal() < curval) {
                 current = next;
@@ -159,7 +158,7 @@ abstract class MazeRouter {
 
     public void beep() throws InterruptedException {
         beep = true;
-        Thread.sleep(50);
+        Thread.sleep(60);
     }
     
     

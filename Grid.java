@@ -77,10 +77,10 @@ class Grid extends JPanel {
         for (int i = 0; i < 3; i++) {
             gp.highlight(true);
             redrawGrid();
-            gridDelay(4);
+            mappedDelay(4);
             gp.highlight(false);
             redrawGrid();
-            gridDelay(4);
+            mappedDelay(4);
         }
     }
 
@@ -159,10 +159,25 @@ class Grid extends JPanel {
         }
     }
 
-    private static final int DELAY = 100; // 10ms = 0.1s
+    private static int DELAY =50; // 10ms = 0.1s
+    
+    public static void setDelay(int i){
+        DELAY=i;
+    }
 
     public void gridDelay(int d) throws InterruptedException {
         Thread.sleep(d * DELAY);
+    }
+    
+    public void mappedDelay(int d) throws InterruptedException{
+        int delay = d*DELAY;
+        if(delay<d*50){
+            delay=d*50;
+        }
+        else if(delay>d*100){
+            delay=d*100;
+        }
+        Thread.sleep(delay);
     }
 
     public void gridDelay() throws InterruptedException {
@@ -192,6 +207,13 @@ class Grid extends JPanel {
             }
         }
         return paused;
+    }
+    
+    public void step(){
+        msg = msg.substring(0, msg.length() - 6);
+            synchronized (router) {
+                router.notify();
+            }
     }
 
     public boolean isPaused() {
@@ -299,7 +321,7 @@ class Grid extends JPanel {
                 if (clearPending) {
                     clear();
                     setMessage("Grid cleared!");
-                    gridDelay(5);
+                    mappedDelay(5);
                     setMessage("Click on Source");
                     clearPending = false;
                 } else if (clickedPoint != null) {
@@ -309,7 +331,7 @@ class Grid extends JPanel {
                         setMessage("Click on Target");
                     } else {
                         setMessage("Already routed!");
-                        gridDelay(5);
+                        mappedDelay(5);
                         setMessage("Click on Source");
                     }
                     clickedPoint = null;
@@ -319,7 +341,7 @@ class Grid extends JPanel {
                     setTarget(clickedPoint);
                     clickedPoint = null;
                     setMessage("Ready to Route!");
-                    gridDelay(5);
+                    mappedDelay(5);
                     redrawGrid();
                     router.route();
                     setState(WAITFORSRC);

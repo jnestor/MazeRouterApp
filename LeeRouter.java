@@ -22,6 +22,9 @@ public class LeeRouter extends MazeRouter {
     public int expandGrid(GridPoint gridPoint) throws InterruptedException {
         GridPoint xp;
         if ((xp = gridPoint.westNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            if (!myGrid.isParallel()) {
+                  beep();  
+                }
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getGVal() + 1);
             if (xp.isTarget()) {
@@ -31,6 +34,9 @@ public class LeeRouter extends MazeRouter {
             }
         }
         if ((xp = gridPoint.eastNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            if (!myGrid.isParallel()) {
+                  beep();  
+                }
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getGVal() + 1);
             if (xp.isTarget()) {
@@ -40,6 +46,9 @@ public class LeeRouter extends MazeRouter {
             }
         }
         if ((xp = gridPoint.southNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            if (!myGrid.isParallel()) {
+                  beep();  
+                }
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getGVal() + 1);
             if (xp.isTarget()) {
@@ -49,6 +58,9 @@ public class LeeRouter extends MazeRouter {
             }
         }
         if ((xp = gridPoint.northNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            if (!myGrid.isParallel()) {
+                  beep();  
+                }
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getGVal() + 1);
             if (xp.isTarget()) {
@@ -58,6 +70,9 @@ public class LeeRouter extends MazeRouter {
             }
         }
         if ((xp = gridPoint.upNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            if (!myGrid.isParallel()) {
+                  beep();  
+                }
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getGVal() + 1);
             if (xp.isTarget()) {
@@ -67,6 +82,9 @@ public class LeeRouter extends MazeRouter {
             }
         }
         if ((xp = gridPoint.downNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            if (!myGrid.isParallel()) {
+                  beep();  
+                }
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getGVal() + 1);
             if (xp.isTarget()) {
@@ -94,7 +112,7 @@ public class LeeRouter extends MazeRouter {
                 return actualLength; // found it right away!
             }
             while ((gp = dequeueGridPoint()) != null && !stop) {
-                if (myGrid.isPaused()) {
+                if (myGrid.isPaused()&&!myGrid.isParallel()) {
                     myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
                     synchronized (this) {
                         wait();
@@ -102,14 +120,18 @@ public class LeeRouter extends MazeRouter {
                 }
                 myGrid.setMessage("Current distance: " + getTail().getGVal());
                 if (myGrid.isParallel() && (gp.getGVal() > curVal)) {
+                    if (myGrid.isPaused()) {
+                    myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
+                    synchronized (this) {
+                        wait();
+                    }
+                }
                     curVal = gp.getGVal();
                     beep();
                     myGrid.redrawGrid();
-                    myGrid.gridDelay(2);
+                    myGrid.gridDelay(3);
                 }
-                else if (!myGrid.isParallel()) {
-                    beep();
-                }
+                
                 if ((actualLength = expandGrid(gp)) > 0) {
                     myGrid.setMessage("Current distance: " + actualLength);
                     myGrid.gridDelay(5);
@@ -142,7 +164,7 @@ public class LeeRouter extends MazeRouter {
         gridPointTail = gp;
         if (!myGrid.isParallel()) {
             myGrid.redrawGrid();
-            myGrid.gridDelay();
+            myGrid.gridDelay(2);
         }
     }
 

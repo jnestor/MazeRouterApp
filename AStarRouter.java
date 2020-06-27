@@ -19,6 +19,7 @@ public class AStarRouter extends MazeRouter {
     public int expandGrid(GridPoint gridPoint) throws InterruptedException {
         GridPoint xp;
         if ((xp = gridPoint.westNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            beep();
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(xp.getFVal());
             if (xp.isTarget()) {
@@ -28,6 +29,7 @@ public class AStarRouter extends MazeRouter {
             }
         }
         if ((xp = gridPoint.eastNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            beep();
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(xp.getFVal());
             if (xp.isTarget()) {
@@ -37,6 +39,7 @@ public class AStarRouter extends MazeRouter {
             }
         }
         if ((xp = gridPoint.southNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            beep();
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(xp.getFVal());
             if (xp.isTarget()) {
@@ -46,6 +49,7 @@ public class AStarRouter extends MazeRouter {
             }
         }
         if ((xp = gridPoint.northNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            beep();
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(xp.getFVal());
             if (xp.isTarget()) {
@@ -55,6 +59,7 @@ public class AStarRouter extends MazeRouter {
             }
         }
         if ((xp = gridPoint.upNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            beep();
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(xp.getFVal());
             if (xp.isTarget()) {
@@ -64,6 +69,7 @@ public class AStarRouter extends MazeRouter {
             }
         }
         if ((xp = gridPoint.downNeighbor()) != null && xp.getGVal() == UNROUTED) {
+            beep();
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(xp.getFVal());
             if (xp.isTarget()) {
@@ -87,7 +93,6 @@ public class AStarRouter extends MazeRouter {
 	if (myGrid.getSource() != null && myGrid.getTarget() != null) {
 	    myGrid.getSource().initExpand();
 	    if ((actualLength = expandGrid(myGrid.getSource())) > 0) {
-                beep();
 		clearQueue();
 		return actualLength; // found it right away!
 	    }
@@ -99,7 +104,6 @@ public class AStarRouter extends MazeRouter {
                         wait();
                     }
                 }
-                beep();
                 myGrid.setMessage("Current distance: " + getTail().getGVal()+
                         " || Current Max Cost: "+ ((GridPoint)gpq.last()).getFVal());
 		//printGridPointQueue();
@@ -141,7 +145,7 @@ public class AStarRouter extends MazeRouter {
         gp.setEnqueued(true);
         //System.out.println("Added gridpoint: " + gp);
         myGrid.redrawGrid();
-        myGrid.gridDelay();
+        myGrid.gridDelay(2);
     }
 
     @Override
