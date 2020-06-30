@@ -20,10 +20,10 @@ class MazeRouterApp {
 private static void createAndShowGUI() {
     MazeRouterFrame mf = new MazeRouterFrame();
     mf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    mf.setSize(new Dimension(980,600));
-    mf.setPreferredSize(new Dimension(980,600));
+    mf.setSize(new Dimension(1030,600));
+    mf.setPreferredSize(new Dimension(1030,600));
     mf.initRouterFrame(21,1);
-    mf.setMinimumSize(new Dimension(980,200));
+    mf.setMinimumSize(new Dimension(1030,200));
     mf.pack();
     mf.setVisible(true);
   }
