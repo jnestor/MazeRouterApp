@@ -179,7 +179,7 @@ public class MazeRouterFrame extends JFrame implements Runnable {
         @Override
         public void actionPerformed(ActionEvent e) {
             pauseBtn.setSelectedIcon(myGrid.isPaused() ? resume : pause);
-           pauseBtn.setSelected(myGrid.isPaused());
+            pauseBtn.setSelected(myGrid.isPaused());
             msgBoard.setText(myGrid.getMSG());
             if (myGrid.getState() == WAITFORSRC) {
                 pauseBtn.setEnabled(false);
@@ -204,14 +204,14 @@ public class MazeRouterFrame extends JFrame implements Runnable {
             } else if (myGrid.getState() == EXPANDING) {
                 pauseBtn.setEnabled(true);
                 stopBtn.setEnabled(true);
-                stepBtn.setEnabled(true);
+                stepBtn.setEnabled(myGrid.isPaused());
                 clearBtn.setEnabled(false);
                 routerComboBox.setEnabled(false);
                 parallelExpandBox.setEnabled(false);
             } else if (myGrid.getState() == TRACKBACK) {
                 pauseBtn.setEnabled(true);
                 stopBtn.setEnabled(false);
-                stepBtn.setEnabled(true);
+                stepBtn.setEnabled(myGrid.isPaused());
                 clearBtn.setEnabled(false);
                 routerComboBox.setEnabled(false);
                 parallelExpandBox.setEnabled(false);
