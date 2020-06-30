@@ -164,6 +164,10 @@ class Grid extends JPanel {
     public static void setDelay(int i){
         DELAY=i;
     }
+    
+    public static int getDelay(){
+        return DELAY;
+    }
 
     public void gridDelay(int d) throws InterruptedException {
         Thread.sleep(d * DELAY);

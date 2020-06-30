@@ -17,8 +17,6 @@ abstract class MazeRouter {
 
     protected Grid myGrid;
     protected boolean stop = false;
-    protected boolean mute = false;
-    private final Sound s = new Sound();
     protected boolean beep = false;
     public MazeRouter(Grid grid) {
         //beeper.start();
@@ -158,7 +156,7 @@ abstract class MazeRouter {
 
     public void beep() throws InterruptedException {
         beep = true;
-        Thread.sleep(60);
+        Thread.sleep(100);
     }
     
     

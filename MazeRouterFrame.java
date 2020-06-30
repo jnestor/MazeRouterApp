@@ -44,6 +44,7 @@ public class MazeRouterFrame extends JFrame implements Runnable {
     private MazeRouter[] routerList = new MazeRouter[3];
     private JDialog resizeWindow = new JDialog(this, "Resize Option", true);
     private WarningDialog resizeWarning = new WarningDialog("Resize the Router will clear all the grids, are you sure you want to resize");
+    private WarningDialog clearWarning = new WarningDialog("This will clear all the grids, are you sure you want to do this");
     Sound s = new Sound();
 
     public synchronized void initRouterFrame(int size, int nlayers) {
@@ -55,7 +56,6 @@ public class MazeRouterFrame extends JFrame implements Runnable {
         msgBoard.setBorder(new EmptyBorder(0, 10, 0, 0));
         initAllGrids(size, nlayers);
         getContentPane().add(title, "North");
-        
         clearBtn.addActionListener(this::clearAction);
         JPanel btnPanel = new JPanel();
         pauseBtn.addActionListener(this::pauseAction);
@@ -75,6 +75,9 @@ public class MazeRouterFrame extends JFrame implements Runnable {
         stopBtn.setPreferredSize(new Dimension(25, 25));
         resizeWindowBtn.setPreferredSize(new Dimension(90, 25));
         speedSlider.setPreferredSize(new Dimension(160,25));
+        clearBtn.setToolTipText("Delete everything on the screen");
+        speedSlider.setToolTipText("Change the speed of the expansion");
+        resizeWindowBtn.setToolTipText("Drag the window to your preferred size and click on this button to refill the entire window");
         btnPanel.add(msgBoard);
         btnPanel.add(routerComboBox);
         btnPanel.add(pauseBtn);
@@ -126,7 +129,10 @@ public class MazeRouterFrame extends JFrame implements Runnable {
     }
 
     private void clearAction(ActionEvent evt) {
-        myGrid.requestClear();
+        Toolkit.getDefaultToolkit().beep();
+        int n = clearWarning.showConfirmDialog(this);
+        if(n==JOptionPane.YES_OPTION)
+            myGrid.requestClear();
         clearBtn.setSelected(false);
     }
 
@@ -165,7 +171,7 @@ public class MazeRouterFrame extends JFrame implements Runnable {
       JSlider source = (JSlider)e.getSource();
       if (!source.getValueIsAdjusting()) {
         int speed = (int)source.getValue();
-	myGrid.setDelay(speed);
+	myGrid.setDelay(101-speed);
       }
     }
 
