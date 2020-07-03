@@ -111,7 +111,7 @@ public class LeeRouter extends MazeRouter {
                 if (getTail() != null) {
                     myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
                 } else {
-                    myGrid.setMessage("Current distance: " + " " + " Pause");
+                    myGrid.setMessage("Click Start or Step to Continue");
                 }
                 synchronized (this) {
                     wait();
@@ -127,7 +127,7 @@ public class LeeRouter extends MazeRouter {
                     if (getTail() != null) {
                         myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
                     } else {
-                        myGrid.setMessage("Current distance: " + " " + " Pause");
+                        myGrid.setMessage("Click Start or Step to Continue");
                     }
                     synchronized (this) {
                         wait();

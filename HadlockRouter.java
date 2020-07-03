@@ -20,65 +20,66 @@ public class HadlockRouter extends MazeRouter {
     public int expandGrid(GridPoint gridPoint) throws InterruptedException {
         GridPoint xp;
         if ((xp = gridPoint.westNeighbor()) != null && xp.getGVal() == UNROUTED) {
-            beep();
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
             if (xp.isTarget()) {
+                beep();
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
             }
         }
         if ((xp = gridPoint.eastNeighbor()) != null && xp.getGVal() == UNROUTED) {
-            beep();
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
             if (xp.isTarget()) {
+                beep();
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
             }
         }
         if ((xp = gridPoint.southNeighbor()) != null && xp.getGVal() == UNROUTED) {
-            beep();
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
             if (xp.isTarget()) {
+                beep();
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
             }
         }
         if ((xp = gridPoint.northNeighbor()) != null && xp.getGVal() == UNROUTED) {
-            beep();
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
             if (xp.isTarget()) {
+                beep();
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
             }
         }
         if ((xp = gridPoint.upNeighbor()) != null && xp.getGVal() == UNROUTED) {
-            beep();
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
             if (xp.isTarget()) {
+                beep();
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
             }
         }
         if ((xp = gridPoint.downNeighbor()) != null && xp.getGVal() == UNROUTED) {
-            beep();
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
             if (xp.isTarget()) {
+                beep();
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
             }
         }
+        beep();
         return -1;
     }
 
@@ -96,7 +97,7 @@ public class HadlockRouter extends MazeRouter {
                 if (getTail() != null) {
                     myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
                 } else {
-                    myGrid.setMessage("Current distance: " + " " + " Pause");
+                    myGrid.setMessage("Click Start or Step to Continue");
                 }
                 synchronized (this) {
                     wait();

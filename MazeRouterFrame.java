@@ -75,6 +75,10 @@ public class MazeRouterFrame extends JFrame implements Runnable {
         stopBtn.setPreferredSize(new Dimension(25, 25));
         resizeWindowBtn.setPreferredSize(new Dimension(90, 25));
         speedSlider.setPreferredSize(new Dimension(160,25));
+        pauseBtn.setToolTipText("Pause");
+        stepBtn.setToolTipText("Step");
+        stopBtn.setToolTipText("Stop");
+        routerComboBox.setToolTipText("Choose the algorithm for routing");
         clearBtn.setToolTipText("Delete everything on the screen");
         speedSlider.setToolTipText("Change the speed of the expansion");
         resizeWindowBtn.setToolTipText("Drag the window to your preferred size and click on this button to refill the entire window");
@@ -113,6 +117,7 @@ public class MazeRouterFrame extends JFrame implements Runnable {
     private void pauseAction(ActionEvent evt) {
         myGrid.pauseResume();
         pauseBtn.setSelectedIcon(myGrid.isPaused() ? resume : pause);
+        pauseBtn.setToolTipText(myGrid.isPaused() ? "Start":"Pause");
     }
     
     private void stepAction(ActionEvent evt){
@@ -179,6 +184,7 @@ public class MazeRouterFrame extends JFrame implements Runnable {
         @Override
         public void actionPerformed(ActionEvent e) {
             pauseBtn.setSelectedIcon(myGrid.isPaused() ? resume : pause);
+            pauseBtn.setToolTipText(myGrid.isPaused() ? "Start":"Pause");
             pauseBtn.setSelected(myGrid.isPaused());
             msgBoard.setText(myGrid.getMSG());
             if (myGrid.getState() == WAITFORSRC) {
