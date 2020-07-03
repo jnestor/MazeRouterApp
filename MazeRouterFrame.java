@@ -68,7 +68,7 @@ public class MazeRouterFrame extends JFrame implements Runnable {
         resizeWindowBtn.addActionListener(this::resizeAction);
         speedSlider.addChangeListener(this::speedChanged);
         btnPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        msgBoard.setPreferredSize(new Dimension(270, 25));
+        msgBoard.setPreferredSize(new Dimension(290, 25));
         pauseBtn.setPreferredSize(new Dimension(25, 25));
         clearBtn.setPreferredSize(new Dimension(25, 25));
         stepBtn.setPreferredSize(new Dimension(25, 25));

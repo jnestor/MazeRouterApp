@@ -1,3 +1,4 @@
+
 import java.util.*;
 
 /*
@@ -10,8 +11,8 @@ import java.util.*;
  * @author 15002
  */
 public class AStarRouter extends MazeRouter {
-    
-    public AStarRouter(Grid g){
+
+    public AStarRouter(Grid g) {
         super(g);
     }
 
@@ -80,42 +81,52 @@ public class AStarRouter extends MazeRouter {
         }
         return -1;
     }
-    
+
     @Override
     public int expansion() throws InterruptedException {
         myGrid.setState(EXPANDING);
-	GridPoint gp;
-	int actualLength;
-	int curVal = 0;
-	myGrid.setMessage("Expansion phase");
-	resetGridPointQueue();
-	myGrid.gridDelay(3);
-	if (myGrid.getSource() != null && myGrid.getTarget() != null) {
-	    myGrid.getSource().initExpand();
-	    if ((actualLength = expandGrid(myGrid.getSource())) > 0) {
-		clearQueue();
-		return actualLength; // found it right away!
-	    }
-	    while ((gp = dequeueGridPoint()) != null&&!stop) {
+        GridPoint gp;
+        int actualLength;
+        int curVal = 0;
+        myGrid.setMessage("Expansion phase");
+        resetGridPointQueue();
+        myGrid.gridDelay(3);
+        if (myGrid.isPaused() && !myGrid.isParallel()) {
+            if (getTail() != null) {
+                myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
+            } else {
+                myGrid.setMessage("Current distance: " + " " + " Pause");
+            }
+            synchronized (this) {
+                wait();
+            }
+        }
+        if (myGrid.getSource() != null && myGrid.getTarget() != null) {
+            myGrid.getSource().initExpand();
+            if ((actualLength = expandGrid(myGrid.getSource())) > 0) {
+                clearQueue();
+                return actualLength; // found it right away!
+            }
+            while ((gp = dequeueGridPoint()) != null && !stop) {
                 if (myGrid.isPaused()) {
-                    myGrid.setMessage("Current distance: " + getTail().getGVal()+
-                        " || Current Max Cost: "+ ((GridPoint)gpq.last()).getFVal() + " Pause");
+                    myGrid.setMessage("Current distance: " + getTail().getGVal()
+                            + " || Current Max Cost: " + ((GridPoint) gpq.last()).getFVal() + " Pause");
                     synchronized (this) {
                         wait();
                     }
                 }
-                myGrid.setMessage("Current distance: " + getTail().getGVal()+
-                        " || Current Max Cost: "+ ((GridPoint)gpq.last()).getFVal());
-		//printGridPointQueue();
-		if ((actualLength = expandGrid(gp)) > 0) {
+                myGrid.setMessage("Current distance: " + getTail().getGVal()
+                        + " || Current Max Cost: " + ((GridPoint) gpq.last()).getFVal());
+                //printGridPointQueue();
+                if ((actualLength = expandGrid(gp)) > 0) {
                     myGrid.setMessage("Current distance: " + actualLength);
                     myGrid.gridDelay(5);
-		    clearQueue();
-		    return actualLength;  // found it!
-		}
-	    }
-	}
-	return -1;
+                    clearQueue();
+                    return actualLength;  // found it!
+                }
+            }
+        }
+        return -1;
     }
 
     private TreeSet<GridPoint> gpq = new TreeSet<GridPoint>();
@@ -166,12 +177,15 @@ public class AStarRouter extends MazeRouter {
     public void clearQueue() {
         gpq.clear();
     }
-    
+
     @Override
     public GridPoint getTail() {
         LinkedList<GridPoint> a = new LinkedList<GridPoint>(gpq);
+        if (a.isEmpty()) {
+            return null;
+        }
         GridPoint gp = Collections.max(a, new GValComparator());
-        maxGVal=gp.getGVal();
+        maxGVal = gp.getGVal();
         return gp;
     }
 

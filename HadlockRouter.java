@@ -1,3 +1,4 @@
+
 import java.util.*;
 
 /*
@@ -5,7 +6,6 @@ import java.util.*;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author 15002
@@ -92,22 +92,32 @@ public class HadlockRouter extends MazeRouter {
         myGrid.gridDelay(3);
         if (myGrid.getSource() != null && myGrid.getTarget() != null) {
             myGrid.getSource().initExpand();
+            if (myGrid.isPaused() && !myGrid.isParallel()) {
+                if (getTail() != null) {
+                    myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
+                } else {
+                    myGrid.setMessage("Current distance: " + " " + " Pause");
+                }
+                synchronized (this) {
+                    wait();
+                }
+            }
             if ((actualLength = expandGrid(myGrid.getSource())) > 0) {
                 beep();
                 clearQueue();
                 return actualLength; // found it right away!
             }
-            while ((gp = dequeueGridPoint()) != null&&!stop) {
+            while ((gp = dequeueGridPoint()) != null && !stop) {
                 if (myGrid.isPaused()) {
-                    myGrid.setMessage("Current distance: " + getTail().getGVal()+
-                        " || Current detour: "+ ((GridPoint)gpq.last()).getFVal() + " Pause");
+                    myGrid.setMessage("Current distance: " + getTail().getGVal()
+                            + " || Current detour: " + ((GridPoint) gpq.last()).getFVal() + " Pause");
                     synchronized (this) {
                         wait();
                     }
                 }
-               //beep();
-                myGrid.setMessage("Current distance: " + getTail().getGVal()+
-                        " || Current detour: "+ ((GridPoint)gpq.last()).getFVal());
+                //beep();
+                myGrid.setMessage("Current distance: " + getTail().getGVal()
+                        + " || Current detour: " + ((GridPoint) gpq.last()).getFVal());
                 // printGridPointQueue();
                 if ((actualLength = expandGrid(gp)) > 0) {
                     myGrid.setMessage("Current distance: " + actualLength);
@@ -173,8 +183,11 @@ public class HadlockRouter extends MazeRouter {
     @Override
     public GridPoint getTail() {
         LinkedList<GridPoint> a = new LinkedList<GridPoint>(gpq);
+        if (a.isEmpty()) {
+            return null;
+        }
         GridPoint gp = Collections.max(a, new GValComparator());
-        maxGVal=gp.getGVal();
+        maxGVal = gp.getGVal();
         return gp;
     }
 
