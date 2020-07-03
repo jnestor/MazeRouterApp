@@ -103,11 +103,13 @@ abstract class MazeRouter {
         }
         GridPoint.nextRouteColor();
         myGrid.reset();
+        myGrid.pauseResume();
         if (myGrid.getSource() == myGrid.getTarget()) {  // trivial case
             myGrid.getSource().setRouted();
             maxGVal = 0;
             return 0;
         } else {
+            
             int actualLength = expansion();
             maxGVal = 0;
             clearQueue();

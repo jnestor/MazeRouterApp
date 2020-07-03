@@ -20,6 +20,16 @@ public class LeeRouter extends MazeRouter {
     @Override
     public int expandGrid(GridPoint gridPoint) throws InterruptedException {
         GridPoint xp;
+//        if (myGrid.isPaused() && !myGrid.isParallel()) {
+//            if (getTail() != null) {
+//                myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
+//            } else {
+//                myGrid.setMessage("Current distance: " + " " + " Pause");
+//            }
+//            synchronized (this) {
+//                wait();
+//            }
+//        }
         if ((xp = gridPoint.westNeighbor()) != null && xp.getGVal() == UNROUTED) {
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getGVal() + 1);
@@ -98,6 +108,16 @@ public class LeeRouter extends MazeRouter {
         myGrid.gridDelay(3);
         if (myGrid.getSource() != null && myGrid.getTarget() != null) {
             myGrid.getSource().initExpand();
+            if (myGrid.isPaused() && !myGrid.isParallel()) {
+                    if (getTail() != null) {
+                        myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
+                    } else {
+                        myGrid.setMessage("Current distance: " + " " + " Pause");
+                    }
+                    synchronized (this) {
+                        wait();
+                    }
+                }
             if ((actualLength = expandGrid(myGrid.getSource())) > 0) {
                 beep();
                 clearQueue();
@@ -105,11 +125,16 @@ public class LeeRouter extends MazeRouter {
             }
             while ((gp = dequeueGridPoint()) != null && !stop) {
                 if (myGrid.isPaused() && !myGrid.isParallel()) {
-                    myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
+                    if (getTail() != null) {
+                        myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
+                    } else {
+                        myGrid.setMessage("Current distance: " + " " + " Pause");
+                    }
                     synchronized (this) {
                         wait();
                     }
                 }
+                gp.setEnqueued(false);
                 myGrid.setMessage("Current distance: " + getTail().getGVal());
                 if (myGrid.isParallel() && (gp.getGVal() > curVal)) {
                     if (myGrid.isPaused()) {
@@ -140,7 +165,9 @@ public class LeeRouter extends MazeRouter {
 
     @Override
     public GridPoint getTail() {
-        maxGVal = gridPointTail.getGVal();
+        if (gridPointTail != null) {
+            maxGVal = gridPointTail.getGVal();
+        }
         return gridPointTail;
     }
 
@@ -166,7 +193,7 @@ public class LeeRouter extends MazeRouter {
         if (gp == null) {
             return null;
         } else {
-            gp.setEnqueued(false);
+
             // debug
 //          System.out.println("GridPoint.dequeuePoint - " + gp);
             return gp;
