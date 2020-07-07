@@ -103,6 +103,9 @@ public class HadlockRouter extends MazeRouter {
                     wait();
                 }
             }
+            if (stop) {
+                return -1;
+            }
             if ((actualLength = expandGrid(myGrid.getSource())) > 0) {
                 beep();
                 clearQueue();
@@ -116,10 +119,13 @@ public class HadlockRouter extends MazeRouter {
                         wait();
                     }
                 }
-                //beep();
-                myGrid.setMessage("Current distance: " + getTail().getGVal()
-                        + " || Current detour: " + ((GridPoint) gpq.last()).getFVal());
-                // printGridPointQueue();
+                if (getTail() != null) {
+                    int val = getTail().getGVal();
+                    myGrid.setMessage("Current distance: " + val
+                            + " || Current detour: " + ((GridPoint) gpq.last()).getFVal());
+                } else {
+                    myGrid.setMessage("ROUTING STOPPED");
+                }
                 if ((actualLength = expandGrid(gp)) > 0) {
                     myGrid.setMessage("Current distance: " + actualLength);
                     myGrid.gridDelay(5);

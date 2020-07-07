@@ -117,6 +117,9 @@ public class LeeRouter extends MazeRouter {
                     wait();
                 }
             }
+            if (stop) {
+                return -1;
+            }
             if ((actualLength = expandGrid(myGrid.getSource())) > 0) {
                 beep();
                 clearQueue();

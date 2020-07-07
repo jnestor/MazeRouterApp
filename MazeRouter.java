@@ -103,13 +103,13 @@ abstract class MazeRouter {
         }
         GridPoint.nextRouteColor();
         myGrid.reset();
-        myGrid.pauseResume();
+        //myGrid.pauseResume();
         if (myGrid.getSource() == myGrid.getTarget()) {  // trivial case
             myGrid.getSource().setRouted();
             maxGVal = 0;
             return 0;
         } else {
-            
+            myGrid.pauseResume();
             int actualLength = expansion();
             maxGVal = 0;
             clearQueue();
@@ -120,6 +120,8 @@ abstract class MazeRouter {
                 traceBack();
             } else {
                 myGrid.setMessage("Target not found!");
+                Toolkit.getDefaultToolkit().beep();
+                Thread.sleep(1000);
             }
             myGrid.reset();
             stop = false;

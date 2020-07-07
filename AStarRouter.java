@@ -104,6 +104,9 @@ public class AStarRouter extends MazeRouter {
         }
         if (myGrid.getSource() != null && myGrid.getTarget() != null) {
             myGrid.getSource().initExpand();
+            if (stop) {
+                return -1;
+            }
             if ((actualLength = expandGrid(myGrid.getSource())) > 0) {
                 clearQueue();
                 return actualLength; // found it right away!
@@ -116,9 +119,13 @@ public class AStarRouter extends MazeRouter {
                         wait();
                     }
                 }
-                myGrid.setMessage("Current distance: " + getTail().getGVal()
-                        + " || Current Max Cost: " + ((GridPoint) gpq.last()).getFVal());
-                //printGridPointQueue();
+                if (getTail() != null) {
+                    int val = getTail().getGVal();
+                    myGrid.setMessage("Current distance: " + val
+                            + " || Current detour: " + ((GridPoint) gpq.last()).getFVal());
+                } else {
+                    myGrid.setMessage("ROUTING STOPPED");
+                }
                 if ((actualLength = expandGrid(gp)) > 0) {
                     myGrid.setMessage("Current distance: " + actualLength);
                     myGrid.gridDelay(5);
