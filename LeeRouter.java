@@ -107,7 +107,7 @@ public class LeeRouter extends MazeRouter {
         myGrid.gridDelay(3);
         if (myGrid.getSource() != null && myGrid.getTarget() != null) {
             myGrid.getSource().initExpand();
-            if (myGrid.isPaused() && !myGrid.isParallel()) {
+            if (myGrid.isPaused()) {
                 if (getTail() != null) {
                     myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
                 } else {
