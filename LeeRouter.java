@@ -20,16 +20,6 @@ public class LeeRouter extends MazeRouter {
     @Override
     public int expandGrid(GridPoint gridPoint) throws InterruptedException {
         GridPoint xp;
-//        if (myGrid.isPaused() && !myGrid.isParallel()) {
-//            if (getTail() != null) {
-//                myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
-//            } else {
-//                myGrid.setMessage("Current distance: " + " " + " Pause");
-//            }
-//            synchronized (this) {
-//                wait();
-//            }
-//        }
         if ((xp = gridPoint.westNeighbor()) != null && xp.getGVal() == UNROUTED) {
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getGVal() + 1);
@@ -107,15 +97,9 @@ public class LeeRouter extends MazeRouter {
         myGrid.gridDelay(3);
         if (myGrid.getSource() != null && myGrid.getTarget() != null) {
             myGrid.getSource().initExpand();
-            if (myGrid.isPaused()) {
-                if (getTail() != null) {
-                    myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
-                } else {
-                    myGrid.setMessage("Click Start or Step to Continue");
-                }
-                synchronized (this) {
-                    wait();
-                }
+            myGrid.setMessage("Click Start or Step to Continue");
+            synchronized (this) {
+                wait();
             }
             if (stop) {
                 return -1;

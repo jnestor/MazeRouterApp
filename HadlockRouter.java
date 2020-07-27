@@ -87,21 +87,14 @@ public class HadlockRouter extends MazeRouter {
         myGrid.setState(EXPANDING);
         GridPoint gp;
         int actualLength;
-        int curVal = 0;
         myGrid.setMessage("Expansion phase");
         resetGridPointQueue();
         myGrid.gridDelay(3);
         if (myGrid.getSource() != null && myGrid.getTarget() != null) {
             myGrid.getSource().initExpand();
-            if (myGrid.isPaused() && !myGrid.isParallel()) {
-                if (getTail() != null) {
-                    myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
-                } else {
-                    myGrid.setMessage("Click Start or Step to Continue");
-                }
-                synchronized (this) {
-                    wait();
-                }
+            myGrid.setMessage("Click Start or Step to Continue");
+            synchronized (this) {
+                wait();
             }
             if (stop) {
                 return -1;
