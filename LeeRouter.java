@@ -15,11 +15,12 @@ public class LeeRouter extends MazeRouter {
     public LeeRouter(Grid g) {
         super(g);
     }
-
+    private boolean expanded=false;
     /* expand a routing search */
     @Override
     public int expandGrid(GridPoint gridPoint) throws InterruptedException {
         GridPoint xp;
+        expanded=false;
         if ((xp = gridPoint.westNeighbor()) != null && xp.getGVal() == UNROUTED) {
             xp.setVals(gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getGVal() + 1);
@@ -28,6 +29,7 @@ public class LeeRouter extends MazeRouter {
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
+                expanded=true;
             }
         }
         if ((xp = gridPoint.eastNeighbor()) != null && xp.getGVal() == UNROUTED) {
@@ -38,6 +40,7 @@ public class LeeRouter extends MazeRouter {
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
+                expanded=true;
             }
         }
         if ((xp = gridPoint.southNeighbor()) != null && xp.getGVal() == UNROUTED) {
@@ -48,6 +51,7 @@ public class LeeRouter extends MazeRouter {
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
+                expanded=true;
             }
         }
         if ((xp = gridPoint.northNeighbor()) != null && xp.getGVal() == UNROUTED) {
@@ -58,6 +62,7 @@ public class LeeRouter extends MazeRouter {
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
+                expanded=true;
             }
         }
         if ((xp = gridPoint.upNeighbor()) != null && xp.getGVal() == UNROUTED) {
@@ -68,6 +73,7 @@ public class LeeRouter extends MazeRouter {
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
+                expanded=true;
             }
         }
         if ((xp = gridPoint.downNeighbor()) != null && xp.getGVal() == UNROUTED) {
@@ -78,9 +84,10 @@ public class LeeRouter extends MazeRouter {
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
+                expanded=true;
             }
         }
-        if (!myGrid.isParallel()) {
+        if (!myGrid.isParallel()&&expanded) {
             beep();
         }
 
@@ -109,8 +116,9 @@ public class LeeRouter extends MazeRouter {
                 clearQueue();
                 return actualLength; // found it right away!
             }
+            expanded=true;
             while ((gp = dequeueGridPoint()) != null && !stop) {
-                if (myGrid.isPaused() && !myGrid.isParallel()) {
+                if (myGrid.isPaused() && !myGrid.isParallel()&&expanded) {
                     if (getTail() != null) {
                         myGrid.setMessage("Current distance: " + getTail().getGVal() + " Pause");
                     } else {

@@ -15,10 +15,11 @@ public class HadlockRouter extends MazeRouter {
     public HadlockRouter(Grid g) {
         super(g);
     }
-
+    private boolean expanded = false;
     /* expand a routing search */
     public int expandGrid(GridPoint gridPoint) throws InterruptedException {
         GridPoint xp;
+        expanded = false;
         if ((xp = gridPoint.westNeighbor()) != null && xp.getGVal() == UNROUTED) {
             xp.setVals(gridPoint.getFVal() + gridPoint.detourNumber(xp), gridPoint.getGVal() + 1);
             xp.setDisplayVal(gridPoint.getFVal() + gridPoint.detourNumber(xp));
@@ -27,6 +28,7 @@ public class HadlockRouter extends MazeRouter {
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
+                expanded=true;
             }
         }
         if ((xp = gridPoint.eastNeighbor()) != null && xp.getGVal() == UNROUTED) {
@@ -37,6 +39,7 @@ public class HadlockRouter extends MazeRouter {
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
+                expanded=true;
             }
         }
         if ((xp = gridPoint.southNeighbor()) != null && xp.getGVal() == UNROUTED) {
@@ -47,6 +50,7 @@ public class HadlockRouter extends MazeRouter {
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
+                expanded=true;
             }
         }
         if ((xp = gridPoint.northNeighbor()) != null && xp.getGVal() == UNROUTED) {
@@ -57,6 +61,7 @@ public class HadlockRouter extends MazeRouter {
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
+                expanded=true;
             }
         }
         if ((xp = gridPoint.upNeighbor()) != null && xp.getGVal() == UNROUTED) {
@@ -67,6 +72,7 @@ public class HadlockRouter extends MazeRouter {
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
+                expanded=true;
             }
         }
         if ((xp = gridPoint.downNeighbor()) != null && xp.getGVal() == UNROUTED) {
@@ -77,8 +83,10 @@ public class HadlockRouter extends MazeRouter {
                 return xp.getGVal();
             } else {
                 enqueueGridPoint(xp);
+                expanded=true;
             }
         }
+        if(expanded)
         beep();
         return -1;
     }
@@ -104,8 +112,9 @@ public class HadlockRouter extends MazeRouter {
                 clearQueue();
                 return actualLength; // found it right away!
             }
+            expanded=true;
             while ((gp = dequeueGridPoint()) != null && !stop) {
-                if (myGrid.isPaused()) {
+                if (myGrid.isPaused()&&expanded) {
                     if (getTail() != null) {
                         int val = getTail().getGVal();
                         myGrid.setMessage("Current distance: " + val
